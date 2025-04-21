@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+
+url = "https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv"
+df = pd.read_csv(url)
+
+print("🔹 First 5 rows:")
+print(df.head())
+
+print("\n🔹 Dataset Shape:", df.shape)
+print("\n🔹 Data Types:")
+print(df.dtypes)
+
+print("\n🔹 Missing Values per Column:")
+print(df.isnull().sum())
+
+print("\n🔹 Descriptive Statistics:")
+print(df.describe())
+
+print("\n🔹 Mean by Species:")
+print(df.groupby('species').mean())
+
+df['sepal_area'] = df['sepal_length'] * df['sepal_width']
+print("\n🔹 Added 'sepal_area' column:")
+print(df[['sepal_length', 'sepal_width', 'sepal_area']].head())
+
+print("\n🔹 Correlation Matrix:")
+print(df.corr(numeric_only=True))
