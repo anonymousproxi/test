@@ -1,0 +1,47 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from mpl_toolkits.mplot3d import Axes3D
+
+data = {
+    'Hours_Studied': [2, 3, 5, 7, 9],
+    'Practice_Problems': [10, 15, 20, 30, 50],
+    'Score': [60, 65, 70, 80, 95]
+}
+
+df = pd.DataFrame(data)
+
+X = df[['Hours_Studied', 'Practice_Problems']]
+y = df['Score']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Intercept:", model.intercept_)
+print("Coefficients:", model.coef_)
+print("Predicted Scores:", y_pred)
+
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+ax.scatter(df['Hours_Studied'], df['Practice_Problems'], df['Score'], c='blue', label='Actual Scores')
+
+x_surf, y_surf = np.meshgrid(np.linspace(df['Hours_Studied'].min(), df['Hours_Studied'].max(), 10),
+                             np.linspace(df['Practice_Problems'].min(), df['Practice_Problems'].max(), 10))
+z_pred = model.intercept_ + model.coef_[0]*x_surf + model.coef_[1]*y_surf
+
+ax.plot_surface(x_surf, y_surf, z_pred, color='lightgreen', alpha=0.5)
+
+ax.set_xlabel('Hours Studied')
+ax.set_ylabel('Practice Problems')
+ax.set_zlabel('Score')
+ax.set_title('Multiple Linear Regression - 3D Plot')
+ax.legend()
+plt.show()
